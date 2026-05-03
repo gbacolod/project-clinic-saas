@@ -1,4 +1,4 @@
-import { QueueStatus } from "@prisma/client";
+import { QueueStatus, TriagePriority } from "@prisma/client";
 import { IsDateString, IsEnum, IsOptional, IsString, MinLength } from "class-validator";
 
 export class CreateQueueEntryDto {
@@ -19,6 +19,10 @@ export class CreateQueueEntryDto {
   @IsOptional()
   @IsEnum(QueueStatus)
   status?: QueueStatus;
+
+  @IsOptional()
+  @IsEnum(TriagePriority)
+  priority?: TriagePriority;
 
   @IsOptional()
   @IsDateString()

@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { TriagePriority } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
 import { handlePrismaError } from "../common/prisma-error";
 import { PrismaService } from "../prisma/prisma.service";
@@ -13,7 +14,7 @@ export class QueueService {
   async create(dto: CreateQueueEntryDto) {
     try {
       return await this.prisma.queueEntry.create({
-        data: this.toCreateData(dto),
+        data: await this.toCreateData(dto),
         include: {
           assignedDoctor: true,
           patient: true,
@@ -30,6 +31,7 @@ export class QueueService {
       where: {
         assignedDoctorId: query.assignedDoctorId,
         patientId: query.patientId,
+        priority: query.priority,
         status: query.status,
       },
       include: {
@@ -38,7 +40,7 @@ export class QueueService {
         triage: true,
         visit: true,
       },
-      orderBy: { queuedAt: "asc" },
+      orderBy: [{ priority: "asc" }, { queuedAt: "asc" }],
       skip: query.offset,
       take: query.limit,
     });
@@ -87,9 +89,12 @@ export class QueueService {
     }
   }
 
-  private toCreateData(dto: CreateQueueEntryDto): Prisma.QueueEntryUncheckedCreateInput {
+  private async toCreateData(dto: CreateQueueEntryDto): Promise<Prisma.QueueEntryUncheckedCreateInput> {
+    const triagePriority = dto.triageId ? await this.findTriagePriority(dto.triageId) : undefined;
+
     return {
       ...dto,
+      priority: dto.priority ?? triagePriority ?? TriagePriority.regular,
       queuedAt: dto.queuedAt ? new Date(dto.queuedAt) : undefined,
     };
   }
@@ -101,5 +106,14 @@ export class QueueService {
       startedAt: dto.startedAt ? new Date(dto.startedAt) : undefined,
       completedAt: dto.completedAt ? new Date(dto.completedAt) : undefined,
     };
+  }
+
+  private async findTriagePriority(triageId: string) {
+    const triage = await this.prisma.triage.findUnique({
+      where: { id: triageId },
+      select: { priority: true },
+    });
+
+    return triage?.priority;
   }
 }

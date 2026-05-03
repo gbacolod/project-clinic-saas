@@ -1,4 +1,4 @@
-import { QueueStatus } from "@prisma/client";
+import { QueueStatus, TriagePriority } from "@prisma/client";
 import { IsEnum, IsOptional, IsString, MinLength } from "class-validator";
 import { PaginationQueryDto } from "../../common/dto/pagination-query.dto";
 
@@ -16,4 +16,8 @@ export class QueueQueryDto extends PaginationQueryDto {
   @IsOptional()
   @IsEnum(QueueStatus)
   status?: QueueStatus;
+
+  @IsOptional()
+  @IsEnum(TriagePriority)
+  priority?: TriagePriority;
 }

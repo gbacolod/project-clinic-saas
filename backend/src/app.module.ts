@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AuthModule } from "./auth/auth.module";
+import { NurseWorkflowModule } from "./nurse-workflow/nurse-workflow.module";
 import { PatientsModule } from "./patients/patients.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { QueueModule } from "./queue/queue.module";
@@ -15,6 +16,7 @@ import { VisitsModule } from "./visits/visits.module";
     AuthModule,
     UsersModule,
     PatientsModule,
+    NurseWorkflowModule,
     TriageModule,
     QueueModule,
     VisitsModule,

@@ -97,6 +97,7 @@ model QueueEntry {
   triageId         String?     @map("triage_id")
   assignedDoctorId String?     @map("assigned_doctor_id")
   status           QueueStatus @default(waiting)
+  priority         TriagePriority @default(regular)
   queuedAt         DateTime    @default(now()) @map("queued_at")
   startedAt        DateTime?   @map("started_at")
   completedAt      DateTime?   @map("completed_at")
@@ -108,7 +109,8 @@ model QueueEntry {
   assignedDoctor User?   @relation("QueueDoctor", fields: [assignedDoctorId], references: [id], onDelete: SetNull)
   visit          Visit?
 
-  @@index([status, queuedAt])
+  @@index([status, priority, queuedAt])
+  @@index([priority, queuedAt])
   @@index([patientId, status])
   @@index([assignedDoctorId, status])
   @@index([triageId])
