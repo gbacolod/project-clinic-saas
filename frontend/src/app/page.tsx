@@ -1,5 +1,5 @@
-import { ClinicWorkspace } from "./components/ClinicWorkspace";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return <ClinicWorkspace />;
+  redirect("/dashboard");
 }
