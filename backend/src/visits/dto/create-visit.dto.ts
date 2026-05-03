@@ -35,6 +35,11 @@ export class CreateVisitDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(2000)
+  prescriptionNotes?: string;
+
+  @IsOptional()
+  @IsString()
   @MaxLength(4000)
   notes?: string;
 }

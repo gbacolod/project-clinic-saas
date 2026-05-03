@@ -92,17 +92,17 @@ model Triage {
 }
 
 model QueueEntry {
-  id               String      @id @default(cuid())
-  patientId        String      @map("patient_id")
-  triageId         String?     @map("triage_id")
-  assignedDoctorId String?     @map("assigned_doctor_id")
-  status           QueueStatus @default(waiting)
+  id               String         @id @default(cuid())
+  patientId        String         @map("patient_id")
+  triageId         String?        @map("triage_id")
+  assignedDoctorId String?        @map("assigned_doctor_id")
+  status           QueueStatus    @default(waiting)
   priority         TriagePriority @default(regular)
-  queuedAt         DateTime    @default(now()) @map("queued_at")
-  startedAt        DateTime?   @map("started_at")
-  completedAt      DateTime?   @map("completed_at")
-  createdAt        DateTime    @default(now()) @map("created_at")
-  updatedAt        DateTime    @updatedAt @map("updated_at")
+  queuedAt         DateTime       @default(now()) @map("queued_at")
+  startedAt        DateTime?      @map("started_at")
+  completedAt      DateTime?      @map("completed_at")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
 
   patient        Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
   triage         Triage? @relation(fields: [triageId], references: [id], onDelete: SetNull)
@@ -118,17 +118,18 @@ model QueueEntry {
 }
 
 model Visit {
-  id           String    @id @default(cuid())
-  patientId    String    @map("patient_id")
-  queueEntryId String?   @unique @map("queue_entry_id")
-  doctorId     String?   @map("doctor_id")
-  startedAt    DateTime  @default(now()) @map("started_at")
-  endedAt      DateTime? @map("ended_at")
-  diagnosis    String?
-  treatment    String?
-  notes        String?
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
+  id                String    @id @default(cuid())
+  patientId         String    @map("patient_id")
+  queueEntryId      String?   @unique @map("queue_entry_id")
+  doctorId          String?   @map("doctor_id")
+  startedAt         DateTime  @default(now()) @map("started_at")
+  endedAt           DateTime? @map("ended_at")
+  diagnosis         String?
+  treatment         String?
+  prescriptionNotes String?   @map("prescription_notes")
+  notes             String?
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
 
   patient    Patient     @relation(fields: [patientId], references: [id], onDelete: Cascade)
   queueEntry QueueEntry? @relation(fields: [queueEntryId], references: [id], onDelete: SetNull)
