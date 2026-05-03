@@ -7,4 +7,132 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Domain models will be added when clinic SaaS features are implemented.
+enum Role {
+  admin
+  doctor
+  nurse
+
+  @@map("roles")
+}
+
+enum QueueStatus {
+  waiting
+  in_consultation
+  completed
+
+  @@map("queue_statuses")
+}
+
+enum TriagePriority {
+  emergency
+  urgent
+  regular
+  follow_up
+
+  @@map("triage_priorities")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      Role     @default(nurse)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  triages      Triage[]     @relation("TriageNurse")
+  queueEntries QueueEntry[] @relation("QueueDoctor")
+  visits       Visit[]      @relation("VisitDoctor")
+
+  @@index([role])
+  @@index([name])
+  @@map("users")
+}
+
+model Patient {
+  id          String    @id @default(cuid())
+  firstName   String    @map("first_name")
+  lastName    String    @map("last_name")
+  dateOfBirth DateTime? @map("date_of_birth")
+  phone       String?
+  email       String?
+  address     String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  triages      Triage[]
+  queueEntries QueueEntry[]
+  visits       Visit[]
+
+  @@index([lastName, firstName])
+  @@index([phone])
+  @@index([email])
+  @@map("patients")
+}
+
+model Triage {
+  id             String         @id @default(cuid())
+  patientId      String         @map("patient_id")
+  nurseId        String?        @map("nurse_id")
+  priority       TriagePriority @default(regular)
+  chiefComplaint String?        @map("chief_complaint")
+  notes          String?
+  vitals         Json?
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  patient      Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  nurse        User?         @relation("TriageNurse", fields: [nurseId], references: [id], onDelete: SetNull)
+  queueEntries QueueEntry[]
+
+  @@index([patientId, createdAt])
+  @@index([nurseId, createdAt])
+  @@index([priority, createdAt])
+  @@map("triages")
+}
+
+model QueueEntry {
+  id               String      @id @default(cuid())
+  patientId        String      @map("patient_id")
+  triageId         String?     @map("triage_id")
+  assignedDoctorId String?     @map("assigned_doctor_id")
+  status           QueueStatus @default(waiting)
+  queuedAt         DateTime    @default(now()) @map("queued_at")
+  startedAt        DateTime?   @map("started_at")
+  completedAt      DateTime?   @map("completed_at")
+  createdAt        DateTime    @default(now()) @map("created_at")
+  updatedAt        DateTime    @updatedAt @map("updated_at")
+
+  patient        Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  triage         Triage? @relation(fields: [triageId], references: [id], onDelete: SetNull)
+  assignedDoctor User?   @relation("QueueDoctor", fields: [assignedDoctorId], references: [id], onDelete: SetNull)
+  visit          Visit?
+
+  @@index([status, queuedAt])
+  @@index([patientId, status])
+  @@index([assignedDoctorId, status])
+  @@index([triageId])
+  @@map("queue_entries")
+}
+
+model Visit {
+  id           String    @id @default(cuid())
+  patientId    String    @map("patient_id")
+  queueEntryId String?   @unique @map("queue_entry_id")
+  doctorId     String?   @map("doctor_id")
+  startedAt    DateTime  @default(now()) @map("started_at")
+  endedAt      DateTime? @map("ended_at")
+  diagnosis    String?
+  treatment    String?
+  notes        String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  patient    Patient     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  queueEntry QueueEntry? @relation(fields: [queueEntryId], references: [id], onDelete: SetNull)
+  doctor     User?       @relation("VisitDoctor", fields: [doctorId], references: [id], onDelete: SetNull)
+
+  @@index([patientId, startedAt])
+  @@index([doctorId, startedAt])
+  @@map("visits")
+}
