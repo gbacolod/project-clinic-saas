@@ -8,62 +8,12 @@
    - Environments: .env.local
 
  ✓ Starting...
- ✓ Ready in 4.5s
+ ✓ Ready in 8s
  ○ Compiling / ...
- ✓ Compiled / in 10.5s (545 modules)
- GET / 307 in 11891ms
+ ✓ Compiled / in 2.4s (531 modules)
+ GET / 307 in 4358ms
  ○ Compiling /dashboard ...
- ✓ Compiled /dashboard in 2s (617 modules)
- GET /dashboard 200 in 2946ms
- GET / 307 in 147ms
- GET /dashboard 200 in 162ms
- ○ Compiling /patients ...
- ✓ Compiled /patients in 935ms (612 modules)
- GET /patients 200 in 1185ms
- GET /dashboard 200 in 56ms
- GET /patients 200 in 35ms
- GET /dashboard 200 in 40ms
- GET /patients 200 in 38ms
- ○ Compiling /patients/create ...
- ✓ Compiled /patients/create in 584ms (619 modules)
- GET /patients/create 200 in 730ms
- ○ Compiling /triage ...
- ✓ Compiled /triage in 992ms (627 modules)
- GET /triage 200 in 1188ms
- GET /patients/create 200 in 841ms
- GET /dashboard 200 in 63ms
- GET /dashboard 200 in 41ms
- ○ Compiling /login ...
- ✓ Compiled /login in 639ms (632 modules)
- GET /login 200 in 768ms
- GET /login 200 in 43ms
- GET /login 200 in 33ms
- GET /patients/create 200 in 44ms
- GET /patients 200 in 46ms
- GET /dashboard 200 in 53ms
- ○ Compiling /consultation ...
- ✓ Compiled /consultation in 884ms (640 modules)
- GET /consultation 200 in 1044ms
- GET /dashboard 200 in 55ms
- GET /patients 200 in 41ms
- GET /patients/create 200 in 49ms
- ○ Compiling /queue ...
- ✓ Compiled /queue in 678ms (629 modules)
- GET /queue 200 in 1042ms
- GET /consultation 200 in 48ms
- ✓ Compiled /triage in 299ms (397 modules)
- GET /triage 200 in 466ms
- ○ Compiling /reports ...
- ✓ Compiled /reports in 593ms (642 modules)
- GET /reports 200 in 713ms
- GET /consultation 200 in 43ms
- GET /consultation 200 in 103ms
- GET /dashboard 200 in 60ms
- GET /dashboard 200 in 43ms
- GET /consultation 200 in 33ms
- GET /dashboard 200 in 39ms
- GET /patients 200 in 60ms
- GET /patients/create 200 in 55ms
- GET /patients 200 in 511ms
- GET /patients 200 in 35ms
- GET /patients 200 in 287ms
+ ✓ Compiled /dashboard in 1451ms (603 modules)
+ GET /dashboard 200 in 2097ms
+ GET / 307 in 181ms
+ GET /dashboard 200 in 145ms
